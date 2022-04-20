@@ -2,6 +2,7 @@
 
 const { ObjectID } = require('bson')
 const connectDb = require('./db')
+const errorHandler = require('./errorHandler')
 
 module.exports = {
     Course: {
@@ -17,9 +18,30 @@ module.exports = {
                 ).toArray()
                 : []
             } catch (error) {
-                console.log(error)
+                errorHandler(error)
             }
             return peopleData
         }
-    }
+    },
+    Person: {
+        __resolveType: (person, context, info) => {
+            if (person.phone) {
+                return 'Monitor'
+            }
+            return 'Student'
+        }
+    },
+    GlobalSearch: {
+        __resolveType: (item, context, info) => {
+          if (item.title) {
+            return 'Course'
+          }
+    
+          if (item.phone) {
+            return 'Monitor'
+          }
+    
+          return 'Student'
+        }
+      }
 }

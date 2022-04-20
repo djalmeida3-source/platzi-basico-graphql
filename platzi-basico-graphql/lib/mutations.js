@@ -2,6 +2,7 @@
 
 const { ObjectID } = require('bson')
 const connectDb = require('./db')
+const errorHandler = require('./errorHandler')
 
 module.exports = {
     createCourse: async (root, { input }) => {
@@ -17,11 +18,11 @@ module.exports = {
             course = await db.collection('courses').insertOne(newCourse)
             newCourse._id = course.insertedId
         } catch (error) {
-            console.log(error)
+            errorHandler(error)
         }
         return newCourse
     },
-    createStudent: async (root, { input }) => {
+    createPerson: async (root, { input }) => {
         let db
         let student
         try {
@@ -29,7 +30,7 @@ module.exports = {
             student = await db.collection('students').insertOne(input)
             input._id = student.insertedId
         } catch (error) {
-            console.log(error)
+            errorHandler(error)
         }
         return input
     },
@@ -46,11 +47,11 @@ module.exports = {
                 { _id: ObjectID(_id) }
             )
         } catch (error) {
-            console.log(error)
+            errorHandler(error)
         }
         return course
     },
-    editStudent: async (root, { _id, input }) => {
+    editPerson: async (root, { _id, input }) => {
         let db
         let student
         try {
@@ -63,7 +64,7 @@ module.exports = {
                 { _id: ObjectID(_id) }
             )
         } catch (error) {
-            console.log(error)
+            errorHandler(error)
         }
         return student
     },
@@ -113,7 +114,7 @@ module.exports = {
                 { $addToSet: { people: ObjectID(personID)}}
             )
         } catch (error) {
-            console.log(error)
+            errorHandler(error)
         }
         return course
     }
